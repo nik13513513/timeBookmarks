@@ -19,7 +19,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 FILE (GLOB HDR
     widget.h
-	ruler.h
+	RulerView.h
 )
 
 FILE (GLOB FORMS
@@ -29,7 +29,7 @@ FILE (GLOB FORMS
 FILE (GLOB SRC
     main.cpp
     widget.cpp
-	ruler.cpp
+	RulerView.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRC} ${HDR} ${FORMS})

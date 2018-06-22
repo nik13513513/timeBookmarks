@@ -39,7 +39,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QGraphicsView" name="graphicsView">
+    <widget class="RulerView" name="graphicsView">
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
@@ -73,6 +73,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>RulerView</class>
+   <extends>QGraphicsView</extends>
+   <header>rulerview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

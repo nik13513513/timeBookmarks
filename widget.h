@@ -3,7 +3,7 @@
 #include <QWidget>
 
 class QGraphicsScene;
-class Ruler;
+class RulerView;
 
 namespace Ui {
 	class Form;
@@ -20,9 +20,6 @@ public:
 private:
 	Ui::Form* ui;
 	QGraphicsScene* m_scene;
-	Ruler*			m_ruler;
 
 	bool eventFilter(QObject *obj, QEvent *event);
-
-
 };
