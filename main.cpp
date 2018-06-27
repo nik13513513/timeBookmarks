@@ -3,10 +3,13 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
+	app.setFont(QFont("Tahoma", 11));
 
-    Widget w;
-    w.show();
+    Widget mainWidget;
+	mainWidget.setWindowTitle(QObject::tr("Bookmarks"));
+    mainWidget.show();
+	mainWidget.resizeSceneSizeToScreen();
 
-    return a.exec();
+    return app.exec();
 }

@@ -16,20 +16,21 @@ find_package(Qt5Widgets REQUIRED)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-
 FILE (GLOB HDR
-    widget.h
-	RulerView.h
+    Widget.h
+    RulerView.h
+    BookmarkManager.h
 )
 
 FILE (GLOB FORMS
-    widget.ui
+    Widget.ui
 )
 
 FILE (GLOB SRC
     main.cpp
-    widget.cpp
-	RulerView.cpp
+    Widget.cpp
+    RulerView.cpp
+    BookmarkManager.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRC} ${HDR} ${FORMS})
@@ -37,7 +38,6 @@ add_executable(${PROJECT_NAME} ${SRC} ${HDR} ${FORMS})
 source_group("SRC" FILES ${SRC})
 source_group("HDR" FILES ${HDR})
 source_group("FORM" FILES ${FORMS})
-
 
 target_link_libraries(${PROJECT_NAME}
     Qt5::Core

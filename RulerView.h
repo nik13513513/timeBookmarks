@@ -9,7 +9,6 @@ public:
 	RulerView(QWidget *parent = Q_NULLPTR);
 	~RulerView();
 
-
 protected:
 	void paintEvent(QPaintEvent *event) Q_DECL_FINAL;
 };
