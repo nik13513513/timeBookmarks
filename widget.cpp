@@ -1,7 +1,7 @@
 ﻿#include <QGraphicsRectItem>
 #include <QInputDialog>
 
-#include "Widget.h"
+#include "widget.h"
 #include "ui_widget.h"
 #include "RulerView.h"
 

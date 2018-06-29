@@ -101,7 +101,7 @@
   <customwidget>
    <class>RulerView</class>
    <extends>QGraphicsView</extends>
-   <header>rulerview.h</header>
+   <header>RulerView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

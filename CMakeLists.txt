@@ -18,7 +18,7 @@ find_package(Qt5Concurrent REQUIRED)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 FILE (GLOB HDR
-    Widget.h
+    widget.h
     RulerView.h
     BookmarkManager.h
     BookmarkGraphicItem.h
@@ -27,18 +27,20 @@ FILE (GLOB HDR
 )
 
 FILE (GLOB FORMS
-    Widget.ui
+    widget.ui
 )
 
 FILE (GLOB SRC
     main.cpp
-    Widget.cpp
+    widget.cpp
     RulerView.cpp
     BookmarkManager.cpp
     BookmarkGraphicItem.cpp
 	IStorage.cpp
 	setStorage.cpp
 )
+
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(${PROJECT_NAME} ${SRC} ${HDR} ${FORMS})
 
