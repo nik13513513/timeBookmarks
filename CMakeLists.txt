@@ -21,7 +21,7 @@ FILE (GLOB HDR
     Widget.h
     RulerView.h
     BookmarkManager.h
-    BookmarkItem.h
+    BookmarkGraphicItem.h
 	IStorage.h
 	setStorage.h
 )
@@ -35,7 +35,7 @@ FILE (GLOB SRC
     Widget.cpp
     RulerView.cpp
     BookmarkManager.cpp
-    BookmarkItem.cpp
+    BookmarkGraphicItem.cpp
 	IStorage.cpp
 	setStorage.cpp
 )

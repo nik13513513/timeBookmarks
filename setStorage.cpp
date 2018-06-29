@@ -1,8 +1,8 @@
 ﻿#include "setStorage.h"
 
 
-SetStorage::SetStorage(QObject* parent):
-IStorage(parent)
+SetStorage::SetStorage(QObject* parent) :
+	IStorage(parent)
 {
 }
 
@@ -20,18 +20,63 @@ std::vector<mergedBookmark> SetStorage::getCalculation(double dx)
 {
 	std::vector<mergedBookmark> retValue;
 
-	for(auto& bm: m_set)
+
+	int i = 0;
+
+	Bookmark prev;
+	mergedBookmark merged;
+	int mergedStartPos{ 0 };
+	bool mergeStarted{ false };
+	QString mergedTooltip;
+
+	for (auto& bm : m_set)
 	{
-		mergedBookmark merged;
+		if (i == 0) {
+			prev = bm;
+			i++;
+			continue;
+		}
 
-		merged.pos1 = dx * bm.time.msecsSinceStartOfDay();
-		merged.pos2 = merged.pos1 + dx*bm.duration;
-		merged.name = bm.name;
-		merged.toolTip  = QString("name:%1 \n time:%2 \n duration:%3").arg(bm.name)
-												.arg(bm.time.toString("hh:mm:ss"))
-									.arg(QTime::fromMSecsSinceStartOfDay(bm.duration).toString("hh:mm:ss"));
+		auto prevX = prev.time.msecsSinceStartOfDay()* dx;
+		auto currentX = bm.time.msecsSinceStartOfDay()* dx;
 
-		retValue.push_back(merged);
+		if (currentX  - prevX < 10 && !mergeStarted)
+		{
+			mergeStarted = true;
+			mergedStartPos = prevX;
+		}else
+		{
+			if (mergeStarted)//in merge
+			{
+				if (currentX - prevX < 10) //continue
+				{
+					continue;	
+				}
+				else {
+					merged.pos1 = mergedStartPos;
+					merged.pos2 = currentX + bm.duration*dx;
+					merged.isMerged = true;
+					merged.name = "merged";
+
+
+					mergeStarted = false;
+				}
+			}else//single
+			{
+				merged.pos1 = currentX;
+				merged.pos2 = currentX + bm.duration*dx;
+				merged.name = bm.name;
+				merged.toolTip = QString("name:%1 \n time:%2 \n duration:%3").arg(bm.name)
+										.arg(bm.time.toString("hh:mm:ss"))
+										.arg(QTime::fromMSecsSinceStartOfDay(bm.duration).toString("hh:mm:ss"));
+			}
+
+			retValue.push_back(merged);
+		}
+
+		prev = bm;
+
+		i++;
 	}
 
 	return retValue;

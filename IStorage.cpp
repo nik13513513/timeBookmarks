@@ -18,8 +18,8 @@ quint32 generateRand(quint32 start, quint32 end)
 	return distr(eng);
 }
 
-IStorage::IStorage(QObject* parent):
-QObject(parent)
+IStorage::IStorage(QObject* parent) :
+	QObject(parent)
 {
 }
 

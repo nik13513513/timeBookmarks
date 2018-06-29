@@ -1,10 +1,10 @@
-#include <QPainter>
+﻿#include <QPainter>
 #include <QGuiApplication>
 
 #include "RulerView.h"
 
 
-RulerView::RulerView(QWidget *parent):
+RulerView::RulerView(QWidget *parent) :
 	QGraphicsView(parent)
 {
 
@@ -33,13 +33,13 @@ void RulerView::paintEvent(QPaintEvent* event)
 	auto height = viewport()->height();
 
 	//draw outline
-	painter.drawRect(lineWidth/2, lineWidth/2, width- lineWidth,
-							height - lineWidth);
+	painter.drawRect(lineWidth / 2, lineWidth / 2, width - lineWidth,
+		height - lineWidth);
 
 	//draw ticks
 	auto step = width / 24.0;//24 hour
 
-	for (int i=0;i<25;++i)
+	for (int i = 0; i < 25; ++i)
 	{
 		auto text = QString("%1h").arg(i);
 		QFontMetrics fm(qApp->font());
@@ -51,7 +51,7 @@ void RulerView::paintEvent(QPaintEvent* event)
 
 		auto margin = 5;//ticks margin
 
-		painter.drawText(p1.x() - fm.width(text)/2.0,
-						 p2.y() + fm.height() + margin, text);
+		painter.drawText(p1.x() - fm.width(text) / 2.0,
+			p2.y() + fm.height() + margin, text);
 	}
 }

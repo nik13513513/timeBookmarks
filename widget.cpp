@@ -31,7 +31,7 @@ void Widget::on_generateButton_clicked()
 {
 	bool ok;
 	auto count = QInputDialog::getInt(this, tr(u8"Введите количество"),
-										tr(u8"Количество:"), 10, 1, 100000000, 10, &ok);
+		tr(u8"Количество:"), 10, 1, 100000, 10, &ok);
 	if (ok)
 	{
 		ui->countLineEdit->setText(QString::number(count));
@@ -56,5 +56,5 @@ void Widget::resizeSceneSizeToScreen()
 {
 	auto size = ui->graphicsView->viewport()->size();
 	m_scene->setSceneRect(0, 0, size.width(),
-								size.height());
+		size.height());
 }
