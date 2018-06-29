@@ -1,75 +1,86 @@
-#include <ctime>
-#include <iostream>
-#include <cstdlib>
-#include <random>
+
 
 #include <QDebug>
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
 
 #include <QGraphicsScene>
-#include <QGraphicsItem>
 
 #include "BookmarkManager.h"
-
-std::random_device rd; // obtain a random number from hardware
-std::mt19937 eng(rd()); // seed the generator
-
-auto timeMax = 60 * 60 * 24 * 1000;
-auto durationMax = 60 * 60 * 3 * 1000;
+#include "BookmarkItem.h"
+#include "setStorage.h"
 
 
-quint32 generateRand(quint32 start,quint32 end)
+BookmarkItem* BookmarkManager::getGraphicsItem(int index)
 {
-	std::uniform_int_distribution<> distr(start, end);
+	if (index >= 0 && index < m_bookmarksGui.size())
+		return m_bookmarksGui.at(index);
 
-	return distr(eng);
+	return nullptr;
 }
 
-BookmarkManager::BookmarkManager(QGraphicsScene* scene):
-	m_scene(scene)
+BookmarkItem* BookmarkManager::createGraphicsItem(const QString& name)
 {
+	auto item = new BookmarkItem();
+	item->setRect(0, 0, 30, 30);
+	item->setName(name);
+
+	m_scene->addItem(item);
+	m_bookmarksGui.push_back(item);
+	
+	return item;
+}
+
+void BookmarkManager::redraw()
+{
+	auto calc_res = m_watcher.result();
+
+	for (int i = 0; i < calc_res.size(); ++i)
+	{
+		auto gi = getGraphicsItem(i);
+
+		if (!gi)
+			gi = createGraphicsItem(calc_res.at(i).name);
+
+		gi->setPos(calc_res.at(i).pos1, 50);
+		gi->setRect(0, 0, calc_res.at(i).pos2 - calc_res.at(i).pos1, 30);
+
+		gi->setToolTip(calc_res.at(i).toolTip);
+	}
+}
+
+
+BookmarkManager::BookmarkManager(QGraphicsScene* scene, QObject* parent):
+	QObject(parent),
+	m_scene(scene),
+	m_storage(new SetStorage())
+{
+
+	connect(&m_watcher, SIGNAL(finished()), this, SLOT(redraw()));
+}
+
+BookmarkManager::~BookmarkManager()
+{
+	delete m_storage;
 }
 
 void BookmarkManager::generateBookmarks(int count)
 {
-	removeBookmarks();
+	qDeleteAll(m_scene->items());
+	m_bookmarksGui.clear();
 
-	auto dx = m_scene->width() / double(timeMax);
+	m_storage->generateBookmarks(count);
 
-	for (int i = 0; i < count; i++) {
-		Bookmark bm;
-		bm.name = QString("Bookmark %1").arg(i);
-		bm.time = QTime::fromMSecsSinceStartOfDay(generateRand(0,timeMax));
-		bm.duration = generateRand(0,durationMax);
-
-		BookmarkHandler bh(bm);
-
-		//debug item
-		auto item = m_scene->addRect(0, 0, 30, 30 , QPen(Qt::darkBlue), QBrush(Qt::blue));
-		item->setOpacity(0.9);
-		item->setPos(dx * bm.time.msecsSinceStartOfDay(), 50);
-		item->setToolTip(QString("%1 \n %2 ").arg(bm.name).arg(bm.time.toString("hh:mm:ss")));
-
-
-		m_bookmarks.emplace(bm.time, BookmarkHandler(bm,item));
-	}
+	recalcItems(m_scene->width());
 }
 
 void BookmarkManager::recalcItems(int width)
 {
 	auto dx = width / double(timeMax);
+	//auto calc_res = m_storage->getCalculation(dx);
 
-	for (auto& item: m_bookmarks)
-	{
-		auto pos = item.second.graphicItem->pos();
-		item.second.graphicItem->setPos(dx*item.second.bookmark.time.msecsSinceStartOfDay(),
-								pos.y());
-	}
-}
-
-void BookmarkManager::removeBookmarks()
-{
-	qDeleteAll(m_scene->items());
-	m_bookmarks.clear();
+	auto future =  QtConcurrent::run(m_storage, &IStorage::getCalculation, dx);
+	m_watcher.setFuture(future);
 }
 
 

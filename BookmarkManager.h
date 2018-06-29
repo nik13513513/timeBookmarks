@@ -1,53 +1,34 @@
 #pragma once 
 
-#include <QString>
-#include <QTime>
-#include <list>
+#include <QFutureWatcher>
+#include "IStorage.h"
 
 class QGraphicsScene;
-class QGraphicsRectItem;
+class BookmarkItem;
+class IStorage;
 
-struct Bookmark
+typedef std::vector< mergedBookmark > calcRes;
+
+class BookmarkManager:public QObject
 {
-	QString		name;	
-	QTime		time;
-	quint32		duration;
-
-	bool operator < (const Bookmark& rv) const
-	{
-		return (time < rv.time);
-	}
-};
-
-struct BookmarkHandler
-{
-	Bookmark			bookmark;
-	QGraphicsRectItem*	graphicItem;
-
-	BookmarkHandler(const Bookmark& bookmark, QGraphicsRectItem* item = nullptr)
-	{
-		this->bookmark = bookmark;
-		graphicItem = item;
-	}
-
-	bool operator < (const BookmarkHandler& rv) const
-	{
-		return (bookmark < rv.bookmark);
-	}
-};
-
-class BookmarkManager
-{
+	Q_OBJECT
 	QGraphicsScene*				m_scene;
-	std::map<QTime,BookmarkHandler>	m_bookmarks;
+	std::vector<BookmarkItem*>	m_bookmarksGui;
+	IStorage*					m_storage;
+	QFutureWatcher<calcRes>		m_watcher;
+
+	BookmarkItem* getGraphicsItem(int index);
+	BookmarkItem* createGraphicsItem(const QString& name);
+
+private slots:
+	void redraw();
 
 public:
-	BookmarkManager(QGraphicsScene* scene);
+	BookmarkManager(QGraphicsScene* scene, QObject* parent = Q_NULLPTR);
+	~BookmarkManager();
+
 	void generateBookmarks(int count);
-
 	void recalcItems(int width);
-
-	void removeBookmarks();
 };
 
 

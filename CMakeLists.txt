@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Concurrent REQUIRED)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -20,6 +21,9 @@ FILE (GLOB HDR
     Widget.h
     RulerView.h
     BookmarkManager.h
+    BookmarkItem.h
+	IStorage.h
+	setStorage.h
 )
 
 FILE (GLOB FORMS
@@ -31,6 +35,9 @@ FILE (GLOB SRC
     Widget.cpp
     RulerView.cpp
     BookmarkManager.cpp
+    BookmarkItem.cpp
+	IStorage.cpp
+	setStorage.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRC} ${HDR} ${FORMS})
@@ -43,4 +50,5 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Core
     Qt5::Widgets
     Qt5::Gui
+	Qt5::Concurrent
 )
